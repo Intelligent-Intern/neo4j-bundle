@@ -9,12 +9,12 @@
     }
   },
   "require": {
-    "php": "^8.2",
+    "php": "^8.3",
     "ext-bcmath": "*",
     "symfony/http-client": "7.2.*",
     "symfony/dependency-injection": "7.2.*",
     "symfony/framework-bundle": "7.2.*",
-    "everyman/neo4jphp": "^1.1"
+    "neoxygen/neoclient": "^5.0"
   },
   "extra": {
     "branch-alias": {
