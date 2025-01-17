@@ -14,7 +14,7 @@
     "symfony/http-client": "7.2.*",
     "symfony/dependency-injection": "7.2.*",
     "symfony/framework-bundle": "7.2.*",
-    "neoxygen/neoclient": "^5.0"
+    "laudis/neo4j-php-client": "3.2.0"
   },
   "extra": {
     "branch-alias": {

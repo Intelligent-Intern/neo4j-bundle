@@ -2,12 +2,19 @@
 
 namespace src\Neo4jBundle\Service\Traits;
 
-use GraphAware\Neo4j\Client\Client;
+use Laudis\Neo4j\Contracts\ClientInterface;
 
 trait QueryExecutionTrait
 {
-    public function runCustomQuery(string $cypherQuery, array $parameters = []): mixed
+    private ClientInterface $client;
+
+    public function runCustomQuery(string $cypherQuery, array $parameters = []): array
     {
-        return $this->client->run($cypherQuery, $parameters)->getRecords();
+        $result = $this->client->run($cypherQuery, $parameters);
+
+        return array_map(
+            fn($record) => $record->values(),
+            $result
+        );
     }
 }
