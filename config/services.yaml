@@ -1,4 +1,12 @@
 services:
-   IntelligentIntern\Neo4jBundle\Service\Neo4jService:
-     tags:
-       - { name: 'graphdb.strategy' }
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  IntelligentIntern\Neo4jBundle\Service\:
+    resource: '../src/Service/*'
+    public: true
+    tags:
+      - { name: 'graphdb.strategy' }
+
