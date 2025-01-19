@@ -1,3 +1,4 @@
 services:
    IntelligentIntern\Neo4jBundle\Service\Neo4jService:
-       tags: ['graphdb.strategy']
+     tags:
+       - { name: 'graphdb.strategy' }
