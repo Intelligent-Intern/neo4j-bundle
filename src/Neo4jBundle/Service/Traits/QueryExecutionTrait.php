@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Neo4jBundle\Service\Traits;
+namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
 use Laudis\Neo4j\Contracts\ClientInterface;
 

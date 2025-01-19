@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Neo4jBundle;
+namespace IntelligentIntern\Neo4jBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

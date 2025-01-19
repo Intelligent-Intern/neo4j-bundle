@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Neo4jBundle\DependencyInjection;
+namespace IntelligentIntern\Neo4jBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
