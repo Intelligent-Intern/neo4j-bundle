@@ -3,11 +3,9 @@
 namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
 use Laudis\Neo4j\Contracts\TransactionInterface;
-use Psr\Log\LoggerInterface;
 
 trait TransactionOperationsTrait
 {
-    private LoggerInterface $logger;
 
     public function startTransaction(): TransactionInterface
     {

@@ -6,8 +6,6 @@ use Laudis\Neo4j\Contracts\ClientInterface;
 
 trait SubgraphOperationsTrait
 {
-    private ClientInterface $client;
-
     public function extractSubgraph(array $rootNode, int $depth, array $criteria = []): array
     {
         $criteriaQuery = !empty($criteria) ? " AND " . implode(" AND ", $criteria) : "";
