@@ -1,6 +1,6 @@
 <?php
 
-namespace IntelligentIntern\DependencyInjection;
+namespace IntelligentIntern\Neo4jBundle\DependencyInjection;
 
 use Exception;
 use Symfony\Component\Config\FileLocator;

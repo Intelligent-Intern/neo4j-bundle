@@ -1,16 +1,16 @@
 <?php
-namespace IntelligentIntern\Service;
+namespace IntelligentIntern\Neo4jBundle\Service;
 
 use App\Interface\GraphDBServiceInterface;
 use App\Service\VaultService;
-use IntelligentIntern\Service\Traits\ContextEvolutionTrait;
-use IntelligentIntern\Service\Traits\ContextSensitiveTrait;
-use IntelligentIntern\Service\Traits\EdgeOperationsTrait;
-use IntelligentIntern\Service\Traits\GraphAnalysisTrait;
-use IntelligentIntern\Service\Traits\NodeOperationsTrait;
-use IntelligentIntern\Service\Traits\QueryExecutionTrait;
-use IntelligentIntern\Service\Traits\SubgraphOperationsTrait;
-use IntelligentIntern\Service\Traits\TransactionOperationsTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\ContextEvolutionTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\ContextSensitiveTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\EdgeOperationsTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\GraphAnalysisTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\NodeOperationsTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\QueryExecutionTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\SubgraphOperationsTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\TransactionOperationsTrait;
 use Laudis\Neo4j\Authentication\Authenticate;
 use Laudis\Neo4j\ClientBuilder;
 use Psr\Log\LoggerInterface;
