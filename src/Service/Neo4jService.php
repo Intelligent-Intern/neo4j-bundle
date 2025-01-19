@@ -62,5 +62,4 @@ class Neo4jService implements GraphDBServiceInterface
     {
         return strtolower($provider) === 'neo4j';
     }
-
 }
