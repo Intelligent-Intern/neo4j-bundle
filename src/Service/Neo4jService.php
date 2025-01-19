@@ -63,13 +63,4 @@ class Neo4jService implements GraphDBServiceInterface
         return strtolower($provider) === 'neo4j';
     }
 
-    public function setLogger(LoggerInterface $logger): void
-    {
-        $this->logger = $logger;
-    }
-
-    public function setVaultService(VaultService $vaultService): void
-    {
-        $this->vaultService = $vaultService;
-    }
 }
