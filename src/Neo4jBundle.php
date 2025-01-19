@@ -1,6 +1,6 @@
 <?php
 
-namespace IntelligentIntern;
+namespace IntelligentIntern\Neo4jBundle;
 
 use IntelligentIntern\DependencyInjection\Compiler\GraphDBServiceCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
