@@ -1,6 +1,7 @@
 <?php
 namespace IntelligentIntern\Neo4jBundle\Service;
 
+use App\Factory\LogServiceFactory;
 use App\Interface\GraphDBServiceInterface;
 use App\Service\VaultService;
 use IntelligentIntern\Neo4jBundle\Service\Traits\ContextEvolutionTrait;
@@ -13,17 +14,17 @@ use IntelligentIntern\Neo4jBundle\Service\Traits\SubgraphOperationsTrait;
 use IntelligentIntern\Neo4jBundle\Service\Traits\TransactionOperationsTrait;
 use Laudis\Neo4j\Authentication\Authenticate;
 use Laudis\Neo4j\ClientBuilder;
-use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\Interface\LogServiceInterface;
 
 class Neo4jService implements GraphDBServiceInterface
 {
     private \Laudis\Neo4j\Contracts\ClientInterface $client;
-    private ?LoggerInterface $logger = null;
+    private ?LogServiceInterface $logger = null;
     private ?VaultService $vaultService = null;
 
     /**
@@ -33,8 +34,10 @@ class Neo4jService implements GraphDBServiceInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function __construct(VaultService $vaultService)
+    public function __construct(VaultService $vaultService, LogServiceFactory $logServiceFactory)
     {
+        $this->logger = $this->logServiceFactory->create();
+
         $neo4jConfig = $vaultService->fetchSecret('secret/data/data/neo4j');
 
         $neo4jUrl = $neo4jConfig['url'] ?? throw new \RuntimeException('NEO4J_URL not found in Vault.');
