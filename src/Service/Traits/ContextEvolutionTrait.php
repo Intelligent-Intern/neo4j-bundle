@@ -1,6 +1,6 @@
 <?php
 
-namespace IntelligentIntern\Neo4jBundle\Service\Traits;
+namespace IntelligentIntern\Service\Traits;
 
 trait ContextEvolutionTrait
 {

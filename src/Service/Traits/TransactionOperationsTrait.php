@@ -1,6 +1,6 @@
 <?php
 
-namespace IntelligentIntern\Neo4jBundle\Service\Traits;
+namespace IntelligentIntern\Service\Traits;
 
 use Laudis\Neo4j\Contracts\TransactionInterface;
 use Psr\Log\LoggerInterface;

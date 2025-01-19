@@ -1,10 +1,10 @@
 <?php
 
-namespace IntelligentIntern\Neo4jBundle;
+namespace IntelligentIntern;
 
-use IntelligentIntern\Neo4jBundle\DependencyInjection\Compiler\GraphDBServiceCompilerPass;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use IntelligentIntern\DependencyInjection\Compiler\GraphDBServiceCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class Neo4jBundle extends Bundle
 {
