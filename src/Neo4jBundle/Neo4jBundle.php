@@ -2,9 +2,9 @@
 
 namespace IntelligentIntern\Neo4jBundle;
 
+use IntelligentIntern\Neo4jBundle\DependencyInjection\Compiler\GraphDBServiceCompilerPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use src\Neo4jBundle\DependencyInjection\Compiler\GraphDBServiceCompilerPass;
 
 class Neo4jBundle extends Bundle
 {

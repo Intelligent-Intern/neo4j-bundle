@@ -3,16 +3,36 @@ namespace IntelligentIntern\Neo4jBundle\Service;
 
 use App\Interface\GraphDBServiceInterface;
 use App\Service\VaultService;
+use IntelligentIntern\Neo4jBundle\Service\Traits\ContextEvolutionTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\ContextSensitiveTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\EdgeOperationsTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\GraphAnalysisTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\NodeOperationsTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\QueryExecutionTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\SubgraphOperationsTrait;
+use IntelligentIntern\Neo4jBundle\Service\Traits\TransactionOperationsTrait;
 use Laudis\Neo4j\Authentication\Authenticate;
 use Laudis\Neo4j\ClientBuilder;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class Neo4jService implements GraphDBServiceInterface
 {
-    private $client;
+    private \Laudis\Neo4j\Contracts\ClientInterface $client;
     private ?LoggerInterface $logger = null;
     private ?VaultService $vaultService = null;
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     public function __construct(VaultService $vaultService)
     {
         $neo4jConfig = $vaultService->fetchSecret('secret/data/data/neo4j');
