@@ -3,8 +3,8 @@ namespace IntelligentIntern\Neo4jBundle\Service;
 
 use App\Factory\LogServiceFactory;
 use App\Service\VaultService;
-use App\Contracts\LogServiceInterface;
-use App\Contracts\GraphDBServiceInterface;
+use App\Contract\LogServiceInterface;
+use App\Contract\GraphDBServiceInterface;
 use IntelligentIntern\Neo4jBundle\Service\Traits\ContextEvolutionTrait;
 use IntelligentIntern\Neo4jBundle\Service\Traits\ContextSensitiveTrait;
 use IntelligentIntern\Neo4jBundle\Service\Traits\EdgeOperationsTrait;
