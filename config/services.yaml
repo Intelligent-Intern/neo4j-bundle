@@ -1,12 +1,12 @@
 services:
-  _defaults:
-    autowire: true
-    autoconfigure: true
-    public: true
-
   IntelligentIntern\Neo4jBundle\Service\:
     resource: '../src/Service/*'
     public: true
     tags:
       - { name: 'graphdb.strategy' }
 
+    App\Factory\GraphDBServiceFactory:
+      arguments:
+        $vaultService: '@App\Service\VaultService'
+        $logServiceFactory: '@App\Factory\LogServiceFactory'
+        $graphDBResolver: '@App\Domain\GraphDBResolver'

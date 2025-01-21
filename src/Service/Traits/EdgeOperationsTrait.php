@@ -2,12 +2,8 @@
 
 namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
-use Laudis\Neo4j\Contracts\ClientInterface;
-
 trait EdgeOperationsTrait
 {
-    private ClientInterface $client;
-
     public function createEdge(array $fromNode, array $toNode, string $type, array $properties = []): array
     {
         $query = "

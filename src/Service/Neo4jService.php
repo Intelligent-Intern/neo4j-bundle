@@ -2,8 +2,9 @@
 namespace IntelligentIntern\Neo4jBundle\Service;
 
 use App\Factory\LogServiceFactory;
-use App\Interface\GraphDBServiceInterface;
 use App\Service\VaultService;
+use App\Contracts\LogServiceInterface;
+use App\Contracts\GraphDBServiceInterface;
 use IntelligentIntern\Neo4jBundle\Service\Traits\ContextEvolutionTrait;
 use IntelligentIntern\Neo4jBundle\Service\Traits\ContextSensitiveTrait;
 use IntelligentIntern\Neo4jBundle\Service\Traits\EdgeOperationsTrait;
@@ -12,20 +13,19 @@ use IntelligentIntern\Neo4jBundle\Service\Traits\NodeOperationsTrait;
 use IntelligentIntern\Neo4jBundle\Service\Traits\QueryExecutionTrait;
 use IntelligentIntern\Neo4jBundle\Service\Traits\SubgraphOperationsTrait;
 use IntelligentIntern\Neo4jBundle\Service\Traits\TransactionOperationsTrait;
-use Laudis\Neo4j\Authentication\Authenticate;
-use Laudis\Neo4j\ClientBuilder;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use App\Interface\LogServiceInterface;
+use Laudis\Neo4j\Authentication\Authenticate;
+use Laudis\Neo4j\ClientBuilder;
+use Laudis\Neo4j\Contracts\TransactionInterface;
+use Laudis\Neo4j\Contracts\ClientInterface;
 
 class Neo4jService implements GraphDBServiceInterface
 {
-    private \Laudis\Neo4j\Contracts\ClientInterface $client;
-    private ?LogServiceInterface $logger = null;
-    private ?VaultService $vaultService = null;
+    private ClientInterface $client;
 
     /**
      * @throws TransportExceptionInterface
@@ -34,8 +34,10 @@ class Neo4jService implements GraphDBServiceInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function __construct(VaultService $vaultService, LogServiceFactory $logServiceFactory)
-    {
+    public function __construct(
+        private readonly VaultService $vaultService,
+        private readonly LogServiceFactory $logServiceFactory
+    ) {
         $this->logger = $this->logServiceFactory->create();
 
         $neo4jConfig = $vaultService->fetchSecret('secret/data/data/neo4j');

@@ -2,8 +2,6 @@
 
 namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
-use Laudis\Neo4j\Contracts\ClientInterface;
-
 trait SubgraphOperationsTrait
 {
     public function extractSubgraph(array $rootNode, int $depth, array $criteria = []): array
@@ -26,13 +24,11 @@ trait SubgraphOperationsTrait
 
     public function compareSubgraphs(array $subgraphA, array $subgraphB): float
     {
-        // Beispielhafte Implementierung eines Vergleichs
         return $this->similarityScore($subgraphA, $subgraphB);
     }
 
     private function similarityScore(array $subgraphA, array $subgraphB): float
     {
-        // Berechnet die Ähnlichkeit zwischen zwei Subgraphen
         $commonElements = array_intersect($subgraphA, $subgraphB);
         $totalElements = array_unique(array_merge($subgraphA, $subgraphB));
 

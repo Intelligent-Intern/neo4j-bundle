@@ -2,12 +2,8 @@
 
 namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
-use Laudis\Neo4j\Contracts\ClientInterface;
-
 trait GraphAnalysisTrait
 {
-    private ClientInterface $client;
-
     public function getNodeCount(string $label = null): int
     {
         $labelQuery = $label ? ":$label" : "";

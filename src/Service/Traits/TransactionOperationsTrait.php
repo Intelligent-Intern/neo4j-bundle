@@ -2,11 +2,9 @@
 
 namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
-use Laudis\Neo4j\Contracts\TransactionInterface;
 
 trait TransactionOperationsTrait
 {
-
     public function startTransaction(): TransactionInterface
     {
         $this->logger->info('Starting a new transaction.');

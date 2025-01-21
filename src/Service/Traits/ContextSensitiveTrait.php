@@ -1,7 +1,6 @@
 <?php
 
 namespace IntelligentIntern\Neo4jBundle\Service\Traits;
-
 trait ContextSensitiveTrait
 {
     public function getRelevantEdges(float $threshold, string $weightType = 'priorityWeight'): array

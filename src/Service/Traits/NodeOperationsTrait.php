@@ -2,11 +2,8 @@
 
 namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
-use Laudis\Neo4j\Contracts\ClientInterface;
-
 trait NodeOperationsTrait
 {
-    private ClientInterface $client;
 
     public function createNode(array $properties): array
     {
