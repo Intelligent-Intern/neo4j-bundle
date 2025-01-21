@@ -5,10 +5,3 @@ services:
     tags:
       - { name: 'graphdb.strategy' }
 
-  App\Factory\GraphDBServiceFactory:
-    class: App\Factory\GraphDBServiceFactory
-    arguments:
-      $vaultService: '@App\Service\VaultService'
-      $logServiceFactory: '@App\Factory\LogServiceFactory'
-      $graphDBResolver: '@App\Domain\GraphDBResolver'
-    public: true
