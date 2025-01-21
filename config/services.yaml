@@ -5,8 +5,8 @@ services:
     tags:
       - { name: 'graphdb.strategy' }
 
-    App\Factory\GraphDBServiceFactory:
-      arguments:
-        $vaultService: '@App\Service\VaultService'
-        $logServiceFactory: '@App\Factory\LogServiceFactory'
-        $graphDBResolver: '@App\Domain\GraphDBResolver'
+  App\Factory\GraphDBServiceFactory:
+    arguments:
+      $vaultService: '@App\Service\VaultService'
+      $logServiceFactory: '@App\Factory\LogServiceFactory'
+      $graphDBResolver: '@App\Domain\GraphDBResolver'
