@@ -2,6 +2,7 @@
 
 namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
+use Laudis\Neo4j\Contracts\TransactionInterface;
 
 trait TransactionOperationsTrait
 {

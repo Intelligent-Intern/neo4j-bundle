@@ -4,7 +4,6 @@ namespace IntelligentIntern\Neo4jBundle\Service\Traits;
 
 trait NodeOperationsTrait
 {
-
     public function createNode(array $properties): array
     {
         $query = "CREATE (n \$props) RETURN id(n) AS id, properties(n) AS props";
