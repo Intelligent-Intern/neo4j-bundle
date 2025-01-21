@@ -1,4 +1,9 @@
 services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
   IntelligentIntern\Neo4jBundle\Service\:
     resource: '../src/Service/*'
     public: true
