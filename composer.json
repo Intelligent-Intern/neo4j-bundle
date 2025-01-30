@@ -1,7 +1,7 @@
 {
   "name": "intelligent-intern/neo4j-bundle",
   "description": "Symfony bundle for Neo4j graph database integration",
-  "type": "symfony-bundle",
+  "type": "intelligent-intern-bundle",
   "license": "MIT",
   "autoload": {
     "psr-4": {
