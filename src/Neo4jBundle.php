@@ -2,7 +2,7 @@
 
 namespace IntelligentIntern\Neo4jBundle;
 
-use App\DependencyInjection\Compiler\GraphDBStrategyCompilerPass;
+use App\DependencyInjection\GraphDB\GraphDBStrategyCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
