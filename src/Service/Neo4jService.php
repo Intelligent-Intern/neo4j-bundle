@@ -9,6 +9,7 @@ use Laudis\Neo4j\Contracts\ClientInterface;
 use Laudis\Neo4j\Authentication\Authenticate;
 use App\Service\VaultService;
 use App\Factory\LogServiceFactory;
+use Laudis\Neo4j\Types\CypherList;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -32,18 +33,20 @@ class Neo4jService implements GraphDBServiceInterface
         private readonly LogServiceFactory $logServiceFactory
     ) {
         $this->logger = $this->logServiceFactory->create();
-
         $neo4jConfig = $this->vaultService->fetchSecret('secret/data/data/neo4j');
-
-        $neo4jUrl = $neo4jConfig['url'] ?? throw new \RuntimeException('NEO4J_URL nicht gefunden in Vault.');
-        $username = $neo4jConfig['username'] ?? throw new \RuntimeException('NEO4J_USERNAME nicht gefunden in Vault.');
-        $password = $neo4jConfig['password'] ?? throw new \RuntimeException('NEO4J_PASSWORD nicht gefunden in Vault.');
-
+        $neo4jUrl = $neo4jConfig['bolt_address'] ?? throw new \RuntimeException("NEO4J_URL not found in Vault.");
+        $auth = $neo4jConfig['auth'] ?? throw new \RuntimeException("NEO4J_AUTH not found in Vault.");
+        [$username, $password] = explode('/', $auth, 2);
         $this->client = ClientBuilder::create()
             ->withDriver('neo4j', $neo4jUrl, Authenticate::basic($username, $password))
             ->build();
+        $this->logger->info("Neo4j client initialized with URL: " . $neo4jUrl);
     }
 
+    /**
+     * @param string $provider
+     * @return bool
+     */
     public function supports(string $provider): bool
     {
         return strtolower($provider) === 'neo4j';
@@ -56,13 +59,17 @@ class Neo4jService implements GraphDBServiceInterface
      */
     public function createNode(string $label, array $properties): array
     {
-        $this->logger->info(sprintf('Erstelle Node mit Label "%s".', $label));
-        $query = sprintf('CREATE (n:%s $props) RETURN n', $label);
+        $query = sprintf("CREATE (n:%s $props) RETURN n", $label);
         $params = ['props' => $properties];
         $result = $this->client->run($query, $params);
-        $node = $result->first()->get('n');
-
-        return $node->toArray();
+        if ($result->isEmpty()) {
+            return [];
+        }
+        $record = $result->first();
+        $node = $record->get('n')->toArray();
+        $node['id'] = $properties['id'] ?? ($node['id'] ?? '');
+        $node['name'] = $properties['name'] ?? ($node['name'] ?? '');
+        return $node;
     }
 
     /**
@@ -72,13 +79,113 @@ class Neo4jService implements GraphDBServiceInterface
      */
     public function deleteNodeById(string $label, string|int $id): bool
     {
-        $this->logger->info(sprintf('Lösche Node mit Label "%s" und ID "%s".', $label, $id));
-        $query = sprintf('MATCH (n:%s {id: $id}) DETACH DELETE n RETURN count(n) AS deletedCount', $label);
+        $query = sprintf("MATCH (n:%s {id: \$id}) DETACH DELETE n RETURN count(n) AS deletedCount", $label);
         $params = ['id' => $id];
         $result = $this->client->run($query, $params);
+        if ($result->isEmpty()) {
+            return false;
+        }
         $record = $result->first();
         $deletedCount = $record->get('deletedCount');
-
         return $deletedCount > 0;
+    }
+
+    /**
+     * @param string $fromLabel
+     * @param string $fromId
+     * @param string $relationship
+     * @param string $toLabel
+     * @param string $toId
+     * @return void
+     */
+    public function createRelationship(string $fromLabel, string $fromId, string $relationship, string $toLabel, string $toId): void
+    {
+        $query = sprintf(
+            "MATCH (a:%s {id: \$startId}), (b:%s {id: \$endId}) CREATE (a)-[:%s]->(b)",
+            $fromLabel,
+            $toLabel,
+            $relationship
+        );
+        $params = ['startId' => $fromId, 'endId' => $toId];
+        $this->client->run($query, $params);
+    }
+
+    /**
+     * @param string $query
+     * @param array $params
+     * @return CypherList
+     */
+    public function runQuery(string $query, array $params = []): CypherList
+    {
+        $this->logger->info("Running query: " . $query);
+        if (!empty($params)) {
+            $this->logger->debug("Query parameters: " . json_encode($params));
+        }
+        $result = $this->client->run($query, $params);
+        $this->logger->info("Query executed successfully.");
+        return $result;
+    }
+
+    /**
+     * @param string $filename
+     * @return array
+     */
+    public function createOrUpdateMetaNode(string $filename): array
+    {
+        $query = 'MERGE (m:ASTMeta {filename: $filename})
+                  ON CREATE SET m.id = $id, m.created = timestamp()
+                  ON MATCH SET m.updated = timestamp()
+                  RETURN m, m.id AS id';
+        $params = ['filename' => $filename, 'id' => uniqid('meta_')];
+        $result = $this->client->run($query, $params);
+        if ($result->isEmpty()) {
+            return [];
+        }
+        $record = $result->first();
+        $node = $record->get('m')->toArray();
+        $node['id'] = $record->get('id') ?? ($params['id']);
+        $node['name'] = $node['name'] ?? $filename;
+        return $node;
+    }
+
+    /**
+     * @param string|int $id
+     * @param array $attributes
+     * @return array
+     */
+    public function updateNode(string|int $id, array $attributes): array
+    {
+        $query = "MATCH (n {id: \$id}) SET n += \$props RETURN n, n.id AS id";
+        $params = ['id' => $id, 'props' => $attributes];
+        $result = $this->client->run($query, $params);
+        if ($result->isEmpty()) {
+            return [];
+        }
+        $record = $result->first();
+        $node = $record->get('n')->toArray();
+        $node['id'] = $record->get('id') ?? ($attributes['id'] ?? $id);
+        $node['name'] = $node['name'] ?? ($attributes['name'] ?? '');
+        return $node;
+    }
+
+    /**
+     * @param string $fromLabel
+     * @param string $fromId
+     * @param string $relationship
+     * @param string $toLabel
+     * @param string $toId
+     * @return bool
+     */
+    public function relationshipExists(string $fromLabel, string $fromId, string $relationship, string $toLabel, string $toId): bool
+    {
+        $query = sprintf(
+            "MATCH (a:%s {id: \$startId})-[r:%s]->(b:%s {id: \$endId}) RETURN r LIMIT 1",
+            $fromLabel,
+            $relationship,
+            $toLabel
+        );
+        $params = ['startId' => $fromId, 'endId' => $toId];
+        $result = $this->client->run($query, $params);
+        return !$result->isEmpty();
     }
 }
